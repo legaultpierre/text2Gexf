@@ -1,0 +1,17 @@
+{
+  "name": "textAnalyser",
+  "version": "1.0.0",
+  "description": "",
+  "main": "textAnalyser.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "legaultpierre",
+  "license": "ISC",
+  "devDependencies": {
+    "mocha": "^2.3.4"
+  }
+}
