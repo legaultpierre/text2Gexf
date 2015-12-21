@@ -137,6 +137,7 @@ var cleanText = function(text) {
   text = text.replace(/»/g, '');
   text = text.replace(/“/g, '');
   text = text.replace(/”/g, '');
+  text = text.replace(/ - /g, '');
   // text = text.replace(/\'/g, '\\\'');
   text = text.replace(/,/g, '');
   text = text.replace(/;/g, '');
