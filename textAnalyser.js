@@ -1,4 +1,5 @@
-var stopWordsLoader = require('./stopWordsLoader.js');
+var stopWordsLoader = require('./stopWordsLoader'),
+    gexfExport = require('./gexfExport');
 
 var wordIndex = {},
     stopWordsIndex = {},
@@ -82,7 +83,6 @@ var loadStopWords = exports.loadStopWords = function(language, callback) {
 
 var findLinkedWords = exports.findLinkedWords = function(word) {
   var wordElement = wordIndex[word];
-  console.log(wordElement)
   var linkedWords = {};
   if (wordElement === undefined) {
     return linkedWords;
@@ -108,16 +108,37 @@ var findLinkedWords = exports.findLinkedWords = function(word) {
   }
 }
 
+var getCouplesOfWords = exports.getCouplesOfWords = function() {
+  var couples = {};
+  Object.keys(wordIndex).forEach(function(word, i, a) {
+    var linked = findLinkedWords(word);
+    Object.keys(linked).forEach(function(link) {
+      if (a.indexOf(link) > i) {
+        if (couples[word] === undefined) {
+          couples[word] = {};
+          couples[word][link] = linked[link];
+        }
+        else if (couples[word][link] === undefined) {
+          couples[word][link] = linked[link];
+        }
+        else {
+          couples[word][link] += linked[link];
+        }
+      }
+    });
+  });
+  return couples;
+}
+
 loadStopWords('en', function() {
-  // console.log(stopWordsIndex)
   linkWordsOfText('Hey you. How are you doing? I love potatoes and you? You love dogs')
   console.log(wordIndex);
   console.log();
   console.log(sentenceIndex);
   console.log();
+  // console.log('couples', getCouplesOfWords())
+  // console.log();
   var word = 'love';
   console.log('Words linked to "' + word + '": ', findLinkedWords(word));
+  gexfExport.writeGEXF('test.gexf', wordIndex, getCouplesOfWords());
 });
-
-// linkWordsOfText('Hey you. How are you doing? I love potatoes and you? You love dogs');
-// console.log(findLinkedWords('doing'));
