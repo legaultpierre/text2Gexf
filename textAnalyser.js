@@ -133,8 +133,12 @@ var getCouplesOfWords = exports.getCouplesOfWords = function() {
 
 var cleanText = function(text) {
   text = text.replace(/"/g, '');
+  text = text.replace(/«/g, '');
+  text = text.replace(/»/g, '');
+  text = text.replace(/“/g, '');
+  text = text.replace(/”/g, '');
   text = text.replace(/\'/g, '\\\'');
-  text = text.replace(/,/, '')
+  text = text.replace(/,/g, '');
   return text;
 }
 
