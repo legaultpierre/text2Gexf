@@ -1,4 +1,7 @@
+var stopWordsLoader = require('./stopWordsLoader.js');
+
 var wordIndex = {},
+    stopWordsIndex = {},
     sentenceIndex = {};
 
 var lowerText = exports.lowerText = function(string) {
@@ -62,6 +65,17 @@ var linkWordsOfText = exports.linkWordsOfText = function(text) {
   });
 }
 
+var loadStopWords = exports.loadStopWords = function(language, callback) {
+  var file;
+  if (language === 'en') {
+    file = './stopWords/stop-words_english_1_en.txt';
+  }
+  stopWordsLoader.importStopWords(file, stopWordsIndex, function(e) {
+    // stopWordsIndex = e;
+    callback();
+  });
+}
+
 var findLinkedWords = exports.findLinkedWords = function(word) {
   var wordElement = wordIndex[word];
   console.log(wordElement)
@@ -90,10 +104,13 @@ var findLinkedWords = exports.findLinkedWords = function(word) {
   }
 }
 
+loadStopWords('en', function(){
+  console.log(stopWordsIndex)
+});
 
-linkWordsOfText('Hey you. How are you doing? I love potatoes and you? You love dogs');
-console.log(wordIndex);
-console.log();
-console.log(sentenceIndex);
-console.log();
-console.log(findLinkedWords('doing'));
+// linkWordsOfText('Hey you. How are you doing? I love potatoes and you? You love dogs');
+// console.log(wordIndex);
+// console.log();
+// console.log(sentenceIndex);
+// console.log();
+// console.log(findLinkedWords('doing'));
