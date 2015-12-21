@@ -11,7 +11,7 @@ var lowerText = exports.lowerText = function(string) {
 }
 
 var segmentBySentence = exports.segmentBySentence = function(string) {
-  var re = /(\.+|\?)\s*/;
+  var re = /(\.+|\?)(?!\d+)\s*/;
   var reLast = /(\.|\?)$/;
   string = string.replace(reLast, '');
 
@@ -137,8 +137,10 @@ var cleanText = function(text) {
   text = text.replace(/»/g, '');
   text = text.replace(/“/g, '');
   text = text.replace(/”/g, '');
-  text = text.replace(/\'/g, '\\\'');
+  // text = text.replace(/\'/g, '\\\'');
   text = text.replace(/,/g, '');
+  text = text.replace(/;/g, '');
+  text = text.replace(/:/g, '');
   return text;
 }
 
@@ -150,8 +152,6 @@ var analyseText = function(text, file) {
     console.log();
     console.log(sentenceIndex);
     console.log();
-    // console.log('couples', getCouplesOfWords())
-    // console.log();
     var word = 'love';
     console.log('Words linked to "' + word + '": ', findLinkedWords(word));
     if (file !== undefined) {
