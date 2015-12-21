@@ -31,28 +31,30 @@ var linkWordsOfSentence = exports.linkWordsOfSentence = function(sentence) {
   var arrayOfWords = segmentSentenceByWords(sentence);
 
   arrayOfWords.forEach(function(word) {
-    // Builds the word index that for each word stores its sentences
-    if (wordIndex[word] === undefined) {
-      wordIndex[word] = {
-        sentences: {}
-      };
-    }
-    if (wordIndex[word].sentences[sentenceID] === undefined) {
-      wordIndex[word].sentences[sentenceID] = 1;
-    }
-    else {
-      wordIndex[word].sentences[sentenceID]++;
-    }
+    if (stopWordsIndex[word] === undefined) {
+      // Builds the word index that for each word stores its sentences
+      if (wordIndex[word] === undefined) {
+        wordIndex[word] = {
+          sentences: {}
+        };
+      }
+      if (wordIndex[word].sentences[sentenceID] === undefined) {
+        wordIndex[word].sentences[sentenceID] = 1;
+      }
+      else {
+        wordIndex[word].sentences[sentenceID]++;
+      }
 
-    // Builds the sentence index that stores for each sentence its words
-    if (sentenceIndex[sentenceID] === undefined) {
-      sentenceIndex[sentenceID] = {};
-    }
-    if (sentenceIndex[sentenceID][word] === undefined) {
-      sentenceIndex[sentenceID][word] = 1;
-    }
-    else {
-      sentenceIndex[sentenceID][word]++;
+      // Builds the sentence index that stores for each sentence its words
+      if (sentenceIndex[sentenceID] === undefined) {
+        sentenceIndex[sentenceID] = {};
+      }
+      if (sentenceIndex[sentenceID][word] === undefined) {
+        sentenceIndex[sentenceID][word] = 1;
+      }
+      else {
+        sentenceIndex[sentenceID][word]++;
+      }
     }
   });
 }
@@ -66,11 +68,13 @@ var linkWordsOfText = exports.linkWordsOfText = function(text) {
 }
 
 var loadStopWords = exports.loadStopWords = function(language, callback) {
-  var file;
+  var files = [];
   if (language === 'en') {
-    file = './stopWords/stop-words_english_1_en.txt';
+    for (var i = 1; i < 7; i++) {
+      files.push('./stopWords/stop-words_english_' + i + '_en.txt');
+    }
   }
-  stopWordsLoader.importStopWords(file, stopWordsIndex, function(e) {
+  stopWordsLoader.importStopWords(files, stopWordsIndex, function() {
     // stopWordsIndex = e;
     callback();
   });
@@ -104,13 +108,16 @@ var findLinkedWords = exports.findLinkedWords = function(word) {
   }
 }
 
-loadStopWords('en', function(){
-  console.log(stopWordsIndex)
+loadStopWords('en', function() {
+  // console.log(stopWordsIndex)
+  linkWordsOfText('Hey you. How are you doing? I love potatoes and you? You love dogs')
+  console.log(wordIndex);
+  console.log();
+  console.log(sentenceIndex);
+  console.log();
+  var word = 'love';
+  console.log('Words linked to "' + word + '": ', findLinkedWords(word));
 });
 
 // linkWordsOfText('Hey you. How are you doing? I love potatoes and you? You love dogs');
-// console.log(wordIndex);
-// console.log();
-// console.log(sentenceIndex);
-// console.log();
 // console.log(findLinkedWords('doing'));
