@@ -1,5 +1,6 @@
 var stopWordsLoader = require('./stopWordsLoader'),
-    gexfExport = require('./gexfExport');
+    gexfExport = require('./gexfExport'),
+    importText = require('./importText');
 
 var wordIndex = {},
     stopWordsIndex = {},
@@ -10,7 +11,7 @@ var lowerText = exports.lowerText = function(string) {
 }
 
 var segmentBySentence = exports.segmentBySentence = function(string) {
-  var re = /(\.+|\?)\s/;
+  var re = /(\.+|\?)\s*/;
   var reLast = /(\.|\?)$/;
   string = string.replace(reLast, '');
 
@@ -130,15 +131,31 @@ var getCouplesOfWords = exports.getCouplesOfWords = function() {
   return couples;
 }
 
-loadStopWords('en', function() {
-  linkWordsOfText('Hey you. How are you doing? I love potatoes and you? You love dogs')
-  console.log(wordIndex);
-  console.log();
-  console.log(sentenceIndex);
-  console.log();
-  // console.log('couples', getCouplesOfWords())
-  // console.log();
-  var word = 'love';
-  console.log('Words linked to "' + word + '": ', findLinkedWords(word));
-  gexfExport.writeGEXF('test.gexf', wordIndex, getCouplesOfWords());
+var cleanText = function(text) {
+  text = text.replace(/"/g, '');
+  text = text.replace(/\'/g, '\\\'');
+  text = text.replace(/,/, '')
+  return text;
+}
+
+var analyseText = function(text, file) {
+  loadStopWords('en', function() {
+    text = cleanText(text);
+    linkWordsOfText(text)
+    console.log(wordIndex);
+    console.log();
+    console.log(sentenceIndex);
+    console.log();
+    // console.log('couples', getCouplesOfWords())
+    // console.log();
+    var word = 'love';
+    console.log('Words linked to "' + word + '": ', findLinkedWords(word));
+    if (file !== undefined) {
+      gexfExport.writeGEXF(file, wordIndex, getCouplesOfWords());
+    }
+  });
+}
+
+importText.importTextFromFile('text.txt', function(text) {
+  analyseText(text, 'test1.gexf');
 });
