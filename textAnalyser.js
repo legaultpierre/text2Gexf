@@ -1,13 +1,7 @@
-var stopWordsLoader = require('./stopWordsLoader');
+var stopWordsLoader = require('./stopWordsLoader'),
+    utils = require('./utils');
 
 var stopWordsIndex = {};
-
-/*
- * Puts text in lower case.
- */
-var lowerText = exports.lowerText = function(string) {
-  return string.toLowerCase();
-}
 
 /*
  * Splits a string into sentences.
@@ -76,12 +70,13 @@ var linkWordsOfSentence =
 var linkWordsOfText =
   exports.linkWordsOfText = function(text, wordIndex, sentenceIndex) {
 
-  text = lowerText(text);
+  text = utils.lowerText(text);
   var sentences = segmentBySentence(text);
   sentences.forEach(function(sentence) {
     linkWordsOfSentence(sentence, wordIndex, sentenceIndex);
   });
 }
+
 /*
  * Load the stop words corresponding to the given language
  */
@@ -160,23 +155,6 @@ var getCouplesOfWords =
 }
 
 /*
- * Cleans the text removing a several characters
- */
-var cleanText = function(text) {
-  text = text.replace(/"/g, '');
-  text = text.replace(/«/g, '');
-  text = text.replace(/»/g, '');
-  text = text.replace(/“/g, '');
-  text = text.replace(/”/g, '');
-  text = text.replace(/ - /g, '');
-  // text = text.replace(/\'/g, '\\\'');
-  text = text.replace(/,/g, '');
-  text = text.replace(/;/g, '');
-  text = text.replace(/:/g, '');
-  return text;
-}
-
-/*
  * Loads the stop words.
  * Index the words of the text.
  * Does an GEXF network
@@ -185,7 +163,7 @@ var analyseText =
   exports.analyseText = function(text, wordIndex, sentenceIndex, callback) {
   
   loadStopWords('en', function() {
-    text = cleanText(text);
+    text = utils.cleanText(text);
     linkWordsOfText(text, wordIndex, sentenceIndex);
     callback();
   });
