@@ -1,15 +1,17 @@
-var stopWordsLoader = require('./stopWordsLoader'),
-    gexfExport = require('./gexfExport'),
-    importText = require('./importText');
+var stopWordsLoader = require('./stopWordsLoader');
 
-var wordIndex = {},
-    stopWordsIndex = {},
-    sentenceIndex = {};
+var stopWordsIndex = {};
 
+/*
+ * Puts text in lower case.
+ */
 var lowerText = exports.lowerText = function(string) {
   return string.toLowerCase();
 }
 
+/*
+ * Splits a string into sentences.
+ */
 var segmentBySentence = exports.segmentBySentence = function(string) {
   var re = /(\.+|\?)(?!\d+)\s*/;
   var reLast = /(\.|\?)$/;
@@ -18,18 +20,25 @@ var segmentBySentence = exports.segmentBySentence = function(string) {
   return string.split(re);
 }
 
+/*
+ * Splits a string into words.
+ */
 var segmentSentenceByWords = exports.segmentSentenceByWords = function(string) {
-  // TODO: add here to remove commas, semi colons...
   string = string.trim();
   var re = /\s+/;
   return string.split(re);
 }
 
-var linkWordsOfSentence = exports.linkWordsOfSentence = function(sentence) {
-  //Here we are going to create an index for every word, and stores it
-  
-  //ID for the sentence
+/*
+ * Stores:
+ *   - for each word, every sentence it's in. (in wordIndex)
+ *   - for each sentence, every word in it. (in sentenceIndex)
+ */
+var linkWordsOfSentence =
+  exports.linkWordsOfSentence = function(sentence, wordIndex, sentenceIndex) {  
+  //ID of the sentence
   var sentenceID = sentence;
+
   var arrayOfWords = segmentSentenceByWords(sentence);
 
   arrayOfWords.forEach(function(word) {
@@ -61,14 +70,21 @@ var linkWordsOfSentence = exports.linkWordsOfSentence = function(sentence) {
   });
 }
 
-var linkWordsOfText = exports.linkWordsOfText = function(text) {
+/*
+ * Index all words/sentences of the given text
+ */
+var linkWordsOfText =
+  exports.linkWordsOfText = function(text, wordIndex, sentenceIndex) {
+
   text = lowerText(text);
   var sentences = segmentBySentence(text);
   sentences.forEach(function(sentence) {
-    linkWordsOfSentence(sentence);
+    linkWordsOfSentence(sentence, wordIndex, sentenceIndex);
   });
 }
-
+/*
+ * Load the stop words corresponding to the given language
+ */
 var loadStopWords = exports.loadStopWords = function(language, callback) {
   var files = [];
   if (language === 'en') {
@@ -82,7 +98,12 @@ var loadStopWords = exports.loadStopWords = function(language, callback) {
   });
 }
 
-var findLinkedWords = exports.findLinkedWords = function(word) {
+/*
+ * Returns the associated words of a given word
+ */
+var findLinkedWords = 
+  exports.findLinkedWords = function(word, wordIndex, sentenceIndex) {
+
   var wordElement = wordIndex[word];
   var linkedWords = {};
   if (wordElement === undefined) {
@@ -109,10 +130,17 @@ var findLinkedWords = exports.findLinkedWords = function(word) {
   }
 }
 
-var getCouplesOfWords = exports.getCouplesOfWords = function() {
+/*
+ * Returns all the words associations.
+ */
+var getCouplesOfWords =
+  exports.getCouplesOfWords = function(wordIndex, sentenceIndex) {
+
   var couples = {};
   Object.keys(wordIndex).forEach(function(word, i, a) {
-    var linked = findLinkedWords(word);
+
+    var linked = findLinkedWords(word, wordIndex, sentenceIndex);
+
     Object.keys(linked).forEach(function(link) {
       if (a.indexOf(link) > i) {
         if (couples[word] === undefined) {
@@ -131,6 +159,9 @@ var getCouplesOfWords = exports.getCouplesOfWords = function() {
   return couples;
 }
 
+/*
+ * Cleans the text removing a several characters
+ */
 var cleanText = function(text) {
   text = text.replace(/"/g, '');
   text = text.replace(/«/g, '');
@@ -145,22 +176,17 @@ var cleanText = function(text) {
   return text;
 }
 
-var analyseText = function(text, file) {
+/*
+ * Loads the stop words.
+ * Index the words of the text.
+ * Does an GEXF network
+ */
+var analyseText =
+  exports.analyseText = function(text, wordIndex, sentenceIndex, callback) {
+  
   loadStopWords('en', function() {
     text = cleanText(text);
-    linkWordsOfText(text)
-    console.log(wordIndex);
-    console.log();
-    console.log(sentenceIndex);
-    console.log();
-    var word = 'love';
-    console.log('Words linked to "' + word + '": ', findLinkedWords(word));
-    if (file !== undefined) {
-      gexfExport.writeGEXF(file, wordIndex, getCouplesOfWords());
-    }
+    linkWordsOfText(text, wordIndex, sentenceIndex);
+    callback();
   });
 }
-
-importText.importTextFromFile('text.txt', function(text) {
-  analyseText(text, 'test1.gexf');
-});

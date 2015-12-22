@@ -1,4 +1,5 @@
 var fs = require('fs');
+var textAnalyser = require('./textAnalyser');
 
 var initiateGEXF = function(file) {
   var text = '<gexf xmlns="http://www.gexf.net/1.2draft" version="1.2">\n' +
@@ -44,7 +45,12 @@ var addEdges = function(file, wordsIndex, couples) {
   fs.appendFileSync(file, text);
 };
 
-var writeGEXF = exports.writeGEXF = function(file, wordsIndex, couples) {
+/*
+ * Creates the GEXF file
+ */
+var writeGEXF = exports.writeGEXF = function(file, wordsIndex, sentenceIndex) {
+  var couples = textAnalyser.getCouplesOfWords(wordsIndex, sentenceIndex);
+
   initiateGEXF(file);
   addNodes(file, wordsIndex);
   addEdges(file, wordsIndex, couples);
