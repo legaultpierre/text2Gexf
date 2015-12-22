@@ -1,4 +1,4 @@
-# Languages symbols
+# Language symbols
 
 This table gives you the symbol to use for your text's language.
 
