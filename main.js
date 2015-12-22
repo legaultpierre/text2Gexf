@@ -3,7 +3,7 @@ var textAnalyser = require('./textAnalyser'),
     importText = require('./importText');
 
 // Loads the text file
-importText.importTextFromFile('example.txt', function(text) {
+importText.importTextFromFile('./example/example.txt', function(text) {
   var wordIndex = {},
       sentenceIndex = {};
 
@@ -11,7 +11,7 @@ importText.importTextFromFile('example.txt', function(text) {
   textAnalyser.analyseText(text, wordIndex, sentenceIndex, function() {
 
     //Creates a GEXF
-    gexfExport.writeGEXF('example.gexf', wordIndex, sentenceIndex);
+    gexfExport.writeGEXF('./example/example.gexf', wordIndex, sentenceIndex);
 
   });
 
