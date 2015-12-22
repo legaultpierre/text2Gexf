@@ -82,11 +82,8 @@ var linkWordsOfText =
  */
 var loadStopWords = exports.loadStopWords = function(language, callback) {
   var files = [];
-  if (language === 'en') {
-    for (var i = 1; i < 7; i++) {
-      files.push('./stopWords/stop-words_english_' + i + '_en.txt');
-    }
-  }
+  files.push('./stopWords/' + language + '.txt');
+
   stopWordsLoader.importStopWords(files, stopWordsIndex, function() {
     // stopWordsIndex = e;
     callback();
@@ -160,9 +157,9 @@ var getCouplesOfWords =
  * Does an GEXF network
  */
 var analyseText =
-  exports.analyseText = function(text, wordIndex, sentenceIndex, callback) {
+  exports.analyseText = function(language, text, wordIndex, sentenceIndex, callback) {
   
-  loadStopWords('en', function() {
+  loadStopWords(language, function() {
     text = utils.cleanText(text);
     linkWordsOfText(text, wordIndex, sentenceIndex);
     callback();

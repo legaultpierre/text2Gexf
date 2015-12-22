@@ -8,7 +8,7 @@ importText.importTextFromFile('./example/example.txt', function(text) {
       sentenceIndex = {};
 
   // Run the analysis and stores the info into wordIndex and sentenceIndex
-  textAnalyser.analyseText(text, wordIndex, sentenceIndex, function() {
+  textAnalyser.analyseText('en', text, wordIndex, sentenceIndex, function() {
 
     //Creates a GEXF
     gexfExport.writeGEXF('./example/example.gexf', wordIndex, sentenceIndex);

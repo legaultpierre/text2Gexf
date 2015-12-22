@@ -13,7 +13,7 @@ var importStopWordsOneFile = function(file, index, callback) {
   var rl = readline.createInterface(instream, outstream);
 
   rl.on('line', function(line) {
-    line = line.toLowerCase();
+    line = line.toLowerCase().trim();
     if (index[line] === undefined) {
       index[line] = 1;
     }

@@ -1,5 +1,3 @@
-# from appendix D of: A Study of Stemming Effects on Information
-# Retrieval in Bahasa Indonesia
 ada
 adanya
 adalah
