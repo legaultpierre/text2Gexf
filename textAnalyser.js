@@ -134,16 +134,20 @@ var getCouplesOfWords =
     var linked = findLinkedWords(word, wordIndex, sentenceIndex);
 
     Object.keys(linked).forEach(function(link) {
+      var linkedOther = findLinkedWords(link, wordIndex, sentenceIndex);
+      var linkScore = linked[link],
+          linkOtherScore = linkedOther[word];
+      var scoreToKeep = Math.max(linkOtherScore, linkScore);
       if (a.indexOf(link) > i) {
         if (couples[word] === undefined) {
           couples[word] = {};
-          couples[word][link] = linked[link];
+          couples[word][link] = scoreToKeep;
         }
         else if (couples[word][link] === undefined) {
-          couples[word][link] = linked[link];
+          couples[word][link] = scoreToKeep;
         }
         else {
-          couples[word][link] += linked[link];
+          couples[word][link] += scoreToKeep;
         }
       }
     });
