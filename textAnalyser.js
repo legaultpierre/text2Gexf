@@ -24,9 +24,9 @@ var segmentSentenceByWords = exports.segmentSentenceByWords = function(string) {
 }
 
 /*
- * Stores:
- *   - for each word, every sentence it's in. (in wordIndex)
- *   - for each sentence, every word in it. (in sentenceIndex)
+ * Stores, for a sentence:
+ *   - for each word, the sentence it's in. (in wordIndex)
+ *   - for the sentence, every word in it. (in sentenceIndex)
  */
 var linkWordsOfSentence =
   exports.linkWordsOfSentence = function(sentence, wordIndex, sentenceIndex) {  
