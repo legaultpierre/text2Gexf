@@ -72,6 +72,348 @@ describe('segmentSentenceByWords', function() {
 });
 
 describe('linkWordsOfSentence', function() {
+
+  describe(' with empty index', function() {
+    it('should work with one occurence of word in sentence', function() {
+      var sentence = 'hello you',
+          wordIndex = {},
+          sentenceIndex = {};
+      var resultWordIndex = {
+        'hello': {
+          sentences: {
+            'hello you': 1
+          }
+        },
+        'you': {
+          sentences: {
+            'hello you': 1
+          }
+        }
+      };
+      var resultSentenceIndex = {
+        'hello you': {
+          'hello': 1,
+          'you': 1
+        }
+      };
+      textAnalyser.linkWordsOfSentence(sentence, wordIndex, sentenceIndex)
+      assert.deepEqual(wordIndex, resultWordIndex);
+      assert.deepEqual(sentenceIndex, resultSentenceIndex);
+    });
+
+    it('should work with two occurences of a word in sentence', function() {
+      var sentence = 'you hello you',
+          wordIndex = {},
+          sentenceIndex = {};
+      var resultWordIndex = {
+        'hello': {
+          sentences: {
+            'you hello you': 1
+          }
+        },
+        'you': {
+          sentences: {
+            'you hello you': 2
+          }
+        }
+      };
+      var resultSentenceIndex = {
+        'you hello you': {
+          'hello': 1,
+          'you': 2
+        }
+      };
+      textAnalyser.linkWordsOfSentence(sentence, wordIndex, sentenceIndex)
+      assert.deepEqual(wordIndex, resultWordIndex);
+      assert.deepEqual(sentenceIndex, resultSentenceIndex);
+    });
+  });
+
+  describe(' with non-empty index', function() {
+    describe(' only not pre-existing words', function() {
+      it('should work with one occurence of word in sentence', function() {
+        var sentence = 'hello you',
+            wordIndex = {
+              'i': {
+                sentences: {
+                  'i love me': 1
+                }
+              },
+              'love': {
+                sentences: {
+                  'i love me': 1
+                }
+              },
+              'me': {
+                sentences: {
+                  'i love me': 1
+                }
+              },
+            },
+            sentenceIndex = {
+              'i love me': {
+                'i': 1,
+                'love': 1,
+                'me': 1
+              }
+            };
+        var resultWordIndex = {
+          'i': {
+              sentences: {
+                'i love me': 1
+              }
+          },
+          'love': {
+            sentences: {
+              'i love me': 1
+            }
+          },
+          'me': {
+            sentences: {
+              'i love me': 1
+            }
+          },
+          'hello': {
+            sentences: {
+              'hello you': 1
+            },
+          },
+          'you': {
+            sentences: {
+              'hello you': 1
+            }
+          }
+        };
+        var resultSentenceIndex = {
+          'hello you': {
+            'hello': 1,
+            'you': 1
+          },
+          'i love me': {
+            'i': 1,
+            'love': 1,
+            'me': 1
+          }
+        };
+        textAnalyser.linkWordsOfSentence(sentence, wordIndex, sentenceIndex)
+        assert.deepEqual(wordIndex, resultWordIndex);
+        assert.deepEqual(sentenceIndex, resultSentenceIndex);
+      });
+
+      it('should work with two occurences of a word in sentence', function() {
+        var sentence = 'you hello you',
+            wordIndex = {
+              'i': {
+                sentences: {
+                  'i love me': 1
+                }
+              },
+              'love': {
+                sentences: {
+                  'i love me': 1
+                }
+              },
+              'me': {
+                sentences: {
+                  'i love me': 1
+                }
+              },
+            },
+            sentenceIndex = {
+              'i love me': {
+                'i': 1,
+                'love': 1,
+                'me': 1
+              }
+            };
+        var resultWordIndex = {
+          'i': {
+              sentences: {
+                'i love me': 1
+              }
+          },
+          'love': {
+            sentences: {
+              'i love me': 1
+            }
+          },
+          'me': {
+            sentences: {
+              'i love me': 1
+            }
+          },
+          'hello': {
+            sentences: {
+              'you hello you': 1
+            }
+          },
+          'you': {
+            sentences: {
+              'you hello you': 2
+            }
+          }
+        };
+        var resultSentenceIndex = {
+          'you hello you': {
+            'hello': 1,
+            'you': 2
+          },
+          'i love me': {
+            'i': 1,
+            'love': 1,
+            'me': 1
+          }
+        };
+        textAnalyser.linkWordsOfSentence(sentence, wordIndex, sentenceIndex)
+        assert.deepEqual(wordIndex, resultWordIndex);
+        assert.deepEqual(sentenceIndex, resultSentenceIndex);
+      });
+    });
+    describe(' with pre-existing words', function() {
+      it('should work with one occurence of word in sentence', function() {
+        var sentence = 'hello you i',
+            wordIndex = {
+              'i': {
+                sentences: {
+                  'i love me': 1
+                }
+              },
+              'love': {
+                sentences: {
+                  'i love me': 1
+                }
+              },
+              'me': {
+                sentences: {
+                  'i love me': 1
+                }
+              },
+            },
+            sentenceIndex = {
+              'i love me': {
+                'i': 1,
+                'love': 1,
+                'me': 1
+              }
+            };
+        var resultWordIndex = {
+          'i': {
+              sentences: {
+                'i love me': 1,
+                'hello you i': 1,
+              }
+          },
+          'love': {
+            sentences: {
+              'i love me': 1
+            }
+          },
+          'me': {
+            sentences: {
+              'i love me': 1
+            }
+          },
+          'hello': {
+            sentences: {
+              'hello you i': 1
+            },
+          },
+          'you': {
+            sentences: {
+              'hello you i': 1
+            }
+          }
+        };
+        var resultSentenceIndex = {
+          'hello you i': {
+            'hello': 1,
+            'you': 1,
+            'i': 1
+          },
+          'i love me': {
+            'i': 1,
+            'love': 1,
+            'me': 1
+          }
+        };
+        textAnalyser.linkWordsOfSentence(sentence, wordIndex, sentenceIndex)
+        assert.deepEqual(wordIndex, resultWordIndex);
+        assert.deepEqual(sentenceIndex, resultSentenceIndex);
+      });
+
+      it('should work with two occurences of a word in sentence', function() {
+        var sentence = 'hello i you i',
+            wordIndex = {
+              'i': {
+                sentences: {
+                  'i love me': 1
+                }
+              },
+              'love': {
+                sentences: {
+                  'i love me': 1
+                }
+              },
+              'me': {
+                sentences: {
+                  'i love me': 1
+                }
+              },
+            },
+            sentenceIndex = {
+              'i love me': {
+                'i': 1,
+                'love': 1,
+                'me': 1
+              }
+            };
+        var resultWordIndex = {
+          'i': {
+              sentences: {
+                'i love me': 1,
+                'hello i you i': 2,
+              }
+          },
+          'love': {
+            sentences: {
+              'i love me': 1
+            }
+          },
+          'me': {
+            sentences: {
+              'i love me': 1
+            }
+          },
+          'hello': {
+            sentences: {
+              'hello i you i': 1
+            },
+          },
+          'you': {
+            sentences: {
+              'hello i you i': 1
+            }
+          }
+        };
+        var resultSentenceIndex = {
+          'hello i you i': {
+            'hello': 1,
+            'you': 1,
+            'i': 2
+          },
+          'i love me': {
+            'i': 1,
+            'love': 1,
+            'me': 1
+          }
+        };
+        textAnalyser.linkWordsOfSentence(sentence, wordIndex, sentenceIndex)
+        assert.deepEqual(wordIndex, resultWordIndex);
+        assert.deepEqual(sentenceIndex, resultSentenceIndex);
+      });
+    });
+
+  });
 });
 
 describe('linkWordsOfText', function() {
