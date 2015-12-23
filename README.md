@@ -1,11 +1,11 @@
-# Text2GEXF
+# Text2gexf
 
 This library aims at creating a GEXF file containing the co-occurences of words in the same sentence.  
 
 
 ## Example
 
-You can find an example of text analysed and of the resulting GEXF file in the `example` folder.
+You can find an example of a to-be-analysed text and of the resulting GEXF file in the `example` folder.
 
 
 ## Install
@@ -19,3 +19,8 @@ You can find an example of text analysed and of the resulting GEXF file in the `
 
 1. Edit the `main.js` file to put your text file (it does not need to be a .txt) and your output gexf file.
 2. Run `npm start`
+
+
+## Languages
+
+This library handles several languages. Please see `languages.md` for more information.
