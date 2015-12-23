@@ -416,17 +416,67 @@ describe('linkWordsOfSentence', function() {
   });
 });
 
-describe('linkWordsOfText', function() {
-});
-
-describe('loadStopWords', function() {
-});
-
 describe('findLinkedWords', function() {
+  var wordIndex = {
+    'i': {
+        sentences: {
+          'i love me': 1,
+          'hello i you i': 2,
+        }
+    },
+    'love': {
+      sentences: {
+        'i love me': 1
+      }
+    },
+    'me': {
+      sentences: {
+        'i love me': 1
+      }
+    },
+    'hello': {
+      sentences: {
+        'hello i you i': 1
+      },
+    },
+    'you': {
+      sentences: {
+        'hello i you i': 1
+      }
+    }
+  };
+  var sentenceIndex = {
+    'hello i you i': {
+      'hello': 1,
+      'you': 1,
+      'i': 2
+    },
+    'i love me': {
+      'i': 1,
+      'love': 1,
+      'me': 1
+    }
+  };
+  it('should work with non present word', function() {
+    assert.deepEqual(textAnalyser.findLinkedWords('toto', wordIndex, sentenceIndex), {});
+  });
+  it('should work with one-sentence word', function() {
+    assert.deepEqual(textAnalyser.findLinkedWords('love', wordIndex, sentenceIndex),
+      {
+        'i': 1,
+        'me': 1
+      });
+  });
+  it('should work with multiple-sentence word', function() {
+    assert.deepEqual(textAnalyser.findLinkedWords('i', wordIndex, sentenceIndex),
+      {
+        'hello': 1,
+        'you': 1,
+        'love': 1,
+        'me': 1
+      });
+  });
 });
 
 describe('getCouplesOfWords', function() {
-});
-
-describe('analyseText', function() {
 });
