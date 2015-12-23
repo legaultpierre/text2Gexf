@@ -1,12 +1,6 @@
 var assert = require('assert');
 var textAnalyser = require('../textAnalyser.js');
 
-describe('Lower text', function() {
-  it('should be in lower case', function() {
-    assert.deepEqual(textAnalyser.lowerText('Test dlL sdfOds. LSes'),'test dll sdfods. lses');
-  });
-});
-
 describe('segmentBySentence', function() {
   describe('delimited by point.', function() {
     var oneSentence = 'Hello you.',
@@ -75,4 +69,22 @@ describe('segmentSentenceByWords', function() {
     assert.deepEqual(textAnalyser.segmentSentenceByWords(sentence4),
                      ['Hey', 'you', 'how']);
   });
+});
+
+describe('linkWordsOfSentence', function() {
+});
+
+describe('linkWordsOfText', function() {
+});
+
+describe('loadStopWords', function() {
+});
+
+describe('findLinkedWords', function() {
+});
+
+describe('getCouplesOfWords', function() {
+});
+
+describe('analyseText', function() {
 });
