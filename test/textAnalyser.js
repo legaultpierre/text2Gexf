@@ -479,4 +479,61 @@ describe('findLinkedWords', function() {
 });
 
 describe('getCouplesOfWords', function() {
+  var wordIndex = {
+    'i': {
+        sentences: {
+          'i love me': 1,
+          'hello i you i': 2,
+        }
+    },
+    'love': {
+      sentences: {
+        'i love me': 1
+      }
+    },
+    'me': {
+      sentences: {
+        'i love me': 1
+      }
+    },
+    'hello': {
+      sentences: {
+        'hello i you i': 1
+      },
+    },
+    'you': {
+      sentences: {
+        'hello i you i': 1
+      }
+    }
+  };
+  var sentenceIndex = {
+    'hello i you i': {
+      'hello': 1,
+      'you': 1,
+      'i': 2
+    },
+    'i love me': {
+      'i': 1,
+      'love': 1,
+      'me': 1
+    }
+  };
+  it('should work', function() {
+    var result = {
+      'i': {
+        'love': 1,
+        'me': 1,
+        'hello': 2,
+        'you': 2
+      },
+      'love': {
+        'me': 1
+      },
+      'hello': {
+        'you': 1
+      }
+    }
+    assert.deepEqual(textAnalyser.getCouplesOfWords(wordIndex, sentenceIndex), result);
+  });
 });
